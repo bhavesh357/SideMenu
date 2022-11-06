@@ -1,9 +1,30 @@
 
 import React from "react";
-import { Typography } from "@mui/material";
+import { Drawer, List, ListItem, ListItemText, Typography } from "@mui/material";
 
 export default function Menu(props){
+    const { menu } = props
     return (
-        <Typography> Test </Typography>
+            <List>
+            {menu.map(item => {
+                return (
+                    <>
+                    <ListItem key={item.name} disablePadding>
+                        <ListItemText primary={item.name} />
+                        {item.routes && (
+                            <List>
+                                {item.routes && item.routes.map( innerItem => (
+                                    <ListItem key={innerItem.name} disablePadding>
+                                        <ListItemText primary={innerItem.name} />
+                                </ListItem>
+                                ))}
+                            </List>
+                        )}
+                    </ListItem>
+                    
+                    </>
+                )
+            })}
+            </List>
     )
 }
