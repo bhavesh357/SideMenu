@@ -1,10 +1,8 @@
 import React from "react";
 import "./styles.css";
-import { 
-  Menu
-} from './Components'
-import { Typography } from "@mui/material";
-import { Routes, Route, NavLink } from 'react-router-dom'
+import { Menu } from "./Components";
+import { Grid, Typography } from "@mui/material";
+import { Routes, Route, NavLink } from "react-router-dom";
 
 const menuJson = [
   {
@@ -84,49 +82,41 @@ const menuJson = [
   },
 ];
 
-
 export default function App() {
   return (
     <div className="App">
+      <Grid container >
+      <Grid item md={3} >
       <Menu menu={menuJson} />
-      <nav>
-        <NavLink to="/">Home</NavLink>
-        {menuJson.map(item => (
+      </Grid>
+      <Grid item md={9} >
+      <Routes>
+        {menuJson.map((item) => (
           <>
-          <NavLink to={item.path} >{item.name}</NavLink>
-          {item.routes && item.routes.map(innerItem => (
-            <NavLink to={innerItem.path} >{innerItem.name}</NavLink>
-      ))}
+            <Route
+              path={item.path}
+              exact={item.exact}
+              element={
+                <React.Suspense fallback={<>...</>}>
+                  <Typography>{item.component}</Typography>
+                </React.Suspense>
+              }
+            />
+            {item.routes &&
+              item.routes.map((innerItem) => (
+                <Route
+                  path={innerItem.path}
+                  exact={innerItem.exact}
+                  element={
+                    <React.Suspense fallback={<>...</>}>
+                      <Typography>{innerItem.component}</Typography>
+                    </React.Suspense>
+                  }
+                />
+              ))}
           </>
         ))}
-        <NavLink to="/product">Product</NavLink>
-      </nav>
-      <Routes>
-      {menuJson.map(item => (
-        <>
         <Route
-          path={item.path}
-          exact={item.exact}
-        element={
-          <React.Suspense fallback={<>...</>}>
-            <Typography>{item.component}</Typography>
-          </React.Suspense>
-        }
-      />
-      {item.routes && item.routes.map(innerItem => (
-        <Route
-        path={innerItem.path}
-        exact={innerItem.exact}
-      element={
-        <React.Suspense fallback={<>...</>}>
-          <Typography>{innerItem.component}</Typography>
-        </React.Suspense>
-      }
-    />
-      ))}
-  </>
-      ))}
-      <Route
           index
           element={
             <React.Suspense fallback={<>...</>}>
@@ -134,7 +124,9 @@ export default function App() {
             </React.Suspense>
           }
         />
-        </Routes>
+      </Routes>
+      </Grid>
+      </Grid>
     </div>
   );
 }
