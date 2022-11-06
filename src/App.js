@@ -1,6 +1,12 @@
+import React from "react";
 import "./styles.css";
+import { 
+  Menu
+} from './Components'
+import { Typography } from "@mui/material";
+import { Routes, Route, NavLink } from 'react-router-dom'
 
-const Menu = [
+const menuJson = [
   {
     name: "Login",
     locale: "user.login",
@@ -78,11 +84,57 @@ const Menu = [
   },
 ];
 
+
 export default function App() {
   return (
     <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
+      <Menu menu={menuJson} />
+      <nav>
+        <NavLink to="/">Home</NavLink>
+        {menuJson.map(item => (
+          <>
+          <NavLink to={item.path} >{item.name}</NavLink>
+          {item.routes && item.routes.map(innerItem => (
+            <NavLink to={innerItem.path} >{innerItem.name}</NavLink>
+      ))}
+          </>
+        ))}
+        <NavLink to="/product">Product</NavLink>
+      </nav>
+      <Routes>
+      {menuJson.map(item => (
+        <>
+        <Route
+          path={item.path}
+          exact={item.exact}
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <Typography>{item.component}</Typography>
+          </React.Suspense>
+        }
+      />
+      {item.routes && item.routes.map(innerItem => (
+        <Route
+        path={innerItem.path}
+        exact={innerItem.exact}
+      element={
+        <React.Suspense fallback={<>...</>}>
+          <Typography>{innerItem.component}</Typography>
+        </React.Suspense>
+      }
+    />
+      ))}
+  </>
+      ))}
+      <Route
+          index
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <Typography>Home</Typography>
+            </React.Suspense>
+          }
+        />
+        </Routes>
     </div>
   );
 }
